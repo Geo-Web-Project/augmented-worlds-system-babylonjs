@@ -1,0 +1,28 @@
+{
+  "name": "@augmented-worlds/system-babylonjs-graphics",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "clean": "rimraf dist tsconfig.build.tsbuildinfo",
+    "build": "tsc -p tsconfig.build.json",
+    "prepare": "yarn build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "^2.8.8"
+  },
+  "dependencies": {
+    "typescript": "^4.9.3"
+  }
+}
