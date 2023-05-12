@@ -23,6 +23,7 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "typescript": "^4.9.3"
+    "@babylonjs/core": "^6.3.1",
+    "typescript": "^5.0.4"
   }
 }
