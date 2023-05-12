@@ -2,9 +2,14 @@
 # yarn lockfile v1
 
 
-"@babylonjs/core@^6.3.1":
+"@babylonjs/core@^6.0.0", "@babylonjs/core@^6.3.1":
   "integrity" "sha512-VShcryUF+H55cJ556Ki9yBQJCIMMALsin1dFHFmdG4VUKlDf9AVj5WbvSmAtr0dRNJZop+RNRrteKHHqVEOYyA=="
   "resolved" "https://registry.npmjs.org/@babylonjs/core/-/core-6.3.1.tgz"
+  "version" "6.3.1"
+
+"@babylonjs/loaders@^6.3.1":
+  "integrity" "sha512-YeosnXHd/h4HewAiCokJ3O5y9XZIpQG4WieriK3xcMtIagw1nx8w31iXv9eXSiZTMFHWcAsvCiEl7GcmppjydQ=="
+  "resolved" "https://registry.npmjs.org/@babylonjs/loaders/-/loaders-6.3.1.tgz"
   "version" "6.3.1"
 
 "@cspotcode/source-map-support@^0.8.0":
@@ -75,6 +80,11 @@
 "augmented-worlds@file:../../Geo-Web-Project/augmented-worlds/pkg":
   "resolved" "file:../../Geo-Web-Project/augmented-worlds/pkg"
   "version" "0.1.0"
+
+"babylonjs-gltf2interface@^6.0.0":
+  "integrity" "sha512-22LBxAhcIVQvhdj6WDYDitD1aDy+k+hBcFNoisrNr+umyhV9fMx56RJ4HwkDd0yXvhP3D46TL+cv9RX2QmvQ6A=="
+  "resolved" "https://registry.npmjs.org/babylonjs-gltf2interface/-/babylonjs-gltf2interface-6.3.1.tgz"
+  "version" "6.3.1"
 
 "create-require@^1.1.0":
   "integrity" "sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ=="
