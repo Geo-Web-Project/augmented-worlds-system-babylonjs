@@ -2,7 +2,6 @@
   "name": "@augmented-worlds/system-babylonjs-graphics",
   "version": "0.1.0",
   "description": "",
-  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -20,7 +19,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
     "typescript": "^4.9.3"
