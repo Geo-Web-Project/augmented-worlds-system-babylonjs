@@ -1,14 +1,23 @@
-import { ComponentType, Component, System } from "augmented-worlds";
-import { World } from "augmented-worlds";
+import {
+  World,
+  ComponentType,
+  Component,
+  System,
+  GLTFModel,
+  Position,
+  Orientation,
+  Scale,
+} from "augmented-worlds";
 
 import { Engine } from "@babylonjs/core/Engines/engine";
 import { Scene } from "@babylonjs/core/scene";
-import { Vector3 } from "@babylonjs/core/Maths/math";
+import { Vector3, Quaternion } from "@babylonjs/core/Maths/math";
 import { FreeCamera } from "@babylonjs/core/Cameras/freeCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
-// import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
-// import { Tools } from "@babylonjs/core/Misc/tools";
-import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
+import { Tools } from "@babylonjs/core/Misc/tools";
+// import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
 
 // Side-effects only imports allowing the standard material to be used as default.
 import "@babylonjs/core/Materials/standardMaterial";
@@ -17,6 +26,12 @@ import "@babylonjs/core/Loading/loadingScreen";
 import "@babylonjs/loaders/glTF";
 import "@babylonjs/core/Animations/animatable";
 import "@babylonjs/core/Materials/Node/Blocks";
+import "@babylonjs/core/assetContainer";
+
+interface BabylonJsMesh extends Component {
+  mesh?: Mesh;
+}
+
 /*
  * BabylonJsGraphicsSystem
  *
@@ -27,6 +42,8 @@ import "@babylonjs/core/Materials/Node/Blocks";
 export class BabylonJsGraphicsSystem implements System {
   #engine: Engine;
   #scene: Scene;
+
+  #initialLoad: boolean = true;
 
   constructor(private world: World, canvas: HTMLCanvasElement) {
     canvas.setAttribute("hidden", "true");
@@ -47,6 +64,14 @@ export class BabylonJsGraphicsSystem implements System {
     );
     light.intensity = 0.7;
 
+    // var sphere = MeshBuilder.CreateSphere(
+    //   "sphere1",
+    //   { segments: 16, diameter: 2 },
+    //   this.#scene
+    // );
+    // sphere.position.y = 2;
+    // sphere.position.z = 5;
+
     // Watch for browser/canvas resize events
     window.addEventListener("resize", () => {
       engine.resize();
@@ -65,59 +90,105 @@ export class BabylonJsGraphicsSystem implements System {
 
     this.#engine.getRenderingCanvas()?.removeAttribute("hidden");
     this.#engine.resize();
-
-    var sphere = MeshBuilder.CreateSphere(
-      "sphere1",
-      { segments: 16, diameter: 2 },
-      this.#scene
-    );
-    sphere.position.y = 2;
-    sphere.position.z = 5;
-
-    //     const assetArrayBuffer = Tools.LoadFileAsync(
-    //       "https://w3s.link/ipfs/QmdPXtkGThsWvR1YKg4QVSR9n8oHMPmpBEnyyV8Tk638o9",
-    //       true
-    //     );
-    //
-    //     assetArrayBuffer
-    //       .then((v) => {
-    //         const assetBlob = new Blob([v]);
-    //         const assetUrl = URL.createObjectURL(assetBlob);
-    //         return SceneLoader.ImportMeshAsync(
-    //           "",
-    //           "./",
-    //           assetUrl,
-    //           this.#scene,
-    //           undefined,
-    //           ".glb"
-    //         );
-    //       })
-    //       .then(({ meshes }) => {
-    //         const mesh = meshes[0];
-    //
-    //         // Set the camera position to center on the mesh
-    //         const boundingBox = mesh.getBoundingInfo().boundingBox;
-    //         const center = boundingBox.center;
-    //         const radius = boundingBox.extendSize.length();
-    //         const camera = new ArcRotateCamera(
-    //           "camera",
-    //           0,
-    //           0,
-    //           radius * 2,
-    //           center,
-    //           scene
-    //         );
-    //         camera.setTarget(center);
-    //         camera.attachControl(canvas, true);
-    //       });
   }
 
   update(
-    _getComponent: (
+    getComponent: (
       componentType: ComponentType,
       entityId: number
-    ) => Component | undefined
+    ) => Component | undefined,
+    getComponents: (componentType: ComponentType) => number[] | undefined
   ): void {
+    if (this.#initialLoad) {
+      this.#initialLoad = false;
+
+      // Load GLTFModel
+      getComponents(ComponentType.GLTFModel)?.map(async (entityId) => {
+        const model = getComponent(
+          ComponentType.GLTFModel,
+          entityId
+        )! as GLTFModel;
+        const component = getComponent(ComponentType.Component, entityId);
+        const assetArrayBuffer = await Tools.LoadFileAsync(
+          `https://w3s.link/ipfs/${model.glTFModel}`,
+          true
+        );
+
+        const assetBlob = new Blob([assetArrayBuffer]);
+        const assetUrl = URL.createObjectURL(assetBlob);
+        const container = await SceneLoader.LoadAssetContainerAsync(
+          assetUrl,
+          undefined,
+          this.#scene,
+          undefined,
+          ".glb"
+        );
+
+        const mesh = container.createRootMesh();
+
+        // Save mesh to component
+        if (component) {
+          (component as BabylonJsMesh).mesh = mesh;
+        } else {
+          this.world.add_component_to_entity(
+            entityId,
+            ComponentType.Component,
+            { mesh }
+          );
+        }
+
+        this.#scene.addMesh(mesh, true);
+      });
+    }
+
+    // Render meshes
+    getComponents(ComponentType.GLTFModel)?.map(async (entityId) => {
+      const mesh = getComponent(ComponentType.Component, entityId) as
+        | BabylonJsMesh
+        | undefined;
+      const position = getComponent(ComponentType.Position, entityId) as
+        | Position
+        | undefined;
+      const orientation = getComponent(ComponentType.Orientation, entityId) as
+        | Orientation
+        | undefined;
+      const scale = getComponent(ComponentType.Scale, entityId) as
+        | Scale
+        | undefined;
+
+      if (mesh?.mesh) {
+        if (position) {
+          mesh.mesh.position = new Vector3(
+            (position.position ?? position.startPosition).x,
+            (position.position ?? position.startPosition).y,
+            (position.position ?? position.startPosition).z
+          );
+        } else {
+          mesh.mesh.position = new Vector3(0, 0, 0);
+        }
+
+        if (orientation) {
+          mesh.mesh.rotationQuaternion = new Quaternion(
+            (orientation.orientation ?? orientation.startOrientation).x,
+            (orientation.orientation ?? orientation.startOrientation).y,
+            (orientation.orientation ?? orientation.startOrientation).z,
+            (orientation.orientation ?? orientation.startOrientation).w
+          );
+        } else {
+          mesh.mesh.rotationQuaternion = new Quaternion(0, 0, 0, 1);
+        }
+
+        if (scale) {
+          mesh.mesh.scaling = new Vector3(
+            (scale.scale ?? scale.startScale).x,
+            (scale.scale ?? scale.startScale).y,
+            (scale.scale ?? scale.startScale).z
+          );
+        } else {
+          mesh.mesh.scaling = new Vector3(1, 1, 1);
+        }
+      }
+    });
     this.#scene.render();
   }
 }
