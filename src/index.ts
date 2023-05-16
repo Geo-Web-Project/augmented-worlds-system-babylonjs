@@ -1,2 +1,2 @@
-export * from "./BabylonJsGraphicsSystem";
-export * from "./BabylonJsWebXRSystem";
+export * from "./graphics/index";
+export * from "./xr/index";

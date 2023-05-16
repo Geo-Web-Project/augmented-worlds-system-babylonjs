@@ -1,12 +1,11 @@
 {
-  "name": "@augmented-worlds/system-babylonjs-graphics",
+  "name": "@augmented-worlds/system-babylonjs",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": "./dist/index.js"
-  },
+  "main": "dist/index",
+  "module": "dist/index",
+  "esnext": "dist/index",
+  "types": "dist/index",
   "files": [
     "dist"
   ],
