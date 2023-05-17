@@ -58,9 +58,9 @@
   "version" "1.0.3"
 
 "@types/node@*":
-  "integrity" "sha512-NP2yfZpgmf2eDRPmgGq+fjGjSwFgYbihA8/gK+ey23qT9RkxsgNTZvGOEpXgzIGqesTYkElELLgtKoMQTys5vA=="
-  "resolved" "https://registry.npmjs.org/@types/node/-/node-20.1.3.tgz"
-  "version" "20.1.3"
+  "integrity" "sha512-WCuw/o4GSwDGMoonES8rcvwsig77dGCMbZDrZr2x4ZZiNW4P/gcoZXe/0twgtobcTkmg9TuKflxYL/DuwDyJzg=="
+  "resolved" "https://registry.npmjs.org/@types/node/-/node-20.1.7.tgz"
+  "version" "20.1.7"
 
 "acorn-walk@^8.1.1":
   "integrity" "sha512-k+iyHEuPgSw6SbuDpGQM+06HQUa04DZ3o+F6CSzXMvvI5KMvnaEqXe+YVe555R9nn6GPt404fos4wcgpw12SDA=="

@@ -3,6 +3,7 @@ import { ComponentType, Component, System } from "augmented-worlds";
 import { Scene } from "@babylonjs/core/scene";
 import { WebXRExperienceHelper } from "@babylonjs/core/XR/webXRExperienceHelper";
 import { WebXRSessionManager } from "@babylonjs/core/XR/webXRSessionManager";
+import { WebXRFeaturesManager } from "@babylonjs/core/XR/webXRFeaturesManager";
 
 // import { Tools } from "@babylonjs/core/Misc/tools";
 // import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
@@ -36,11 +37,24 @@ export class BabylonJsWebXRSystem implements System {
     const xrHelper = await this.#xrHelperP;
 
     // TODO: Allow for custom XR config
-    this.#sessionManager = await xrHelper.enterXRAsync("immersive-ar", "local");
+    this.#sessionManager = await xrHelper.enterXRAsync(
+      "immersive-ar",
+      "local",
+      undefined,
+      {
+        requiredFeatures: ["anchors"],
+      }
+    );
   }
 
   getXRSessionManager(): WebXRSessionManager | undefined {
     return this.#sessionManager;
+  }
+
+  getXRFeaturesManager(): WebXRFeaturesManager | undefined {
+    if (!this.#sessionManager) return;
+
+    return new WebXRFeaturesManager(this.#sessionManager);
   }
 
   update(
