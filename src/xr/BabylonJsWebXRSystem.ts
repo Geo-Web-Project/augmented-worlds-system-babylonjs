@@ -26,11 +26,17 @@ export class BabylonJsWebXRSystem implements System {
   #xrHelperP: Promise<WebXRExperienceHelper>;
   #sessionManager?: WebXRSessionManager;
 
+  #requiredFeatures: string[] = ["local"];
+
   constructor(scene: Scene) {
     this.#scene = scene;
 
     // Setup XR
     this.#xrHelperP = WebXRExperienceHelper.CreateAsync(this.#scene);
+  }
+
+  addFeature(feature: string) {
+    this.#requiredFeatures.push(feature);
   }
 
   async startXRSession() {
@@ -42,7 +48,7 @@ export class BabylonJsWebXRSystem implements System {
       "local",
       undefined,
       {
-        requiredFeatures: ["anchors"],
+        requiredFeatures: this.#requiredFeatures,
       }
     );
   }

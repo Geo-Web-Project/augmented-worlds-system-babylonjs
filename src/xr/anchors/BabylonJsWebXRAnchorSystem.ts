@@ -25,7 +25,9 @@ interface BabylonJsWebXRAnchor extends Component {
 export class BabylonJsWebXRAnchorSystem implements System {
   #anchorSystem?: WebXRAnchorSystem;
 
-  constructor(private webXRSystem: BabylonJsWebXRSystem) {}
+  constructor(private webXRSystem: BabylonJsWebXRSystem) {
+    webXRSystem.addFeature("anchors");
+  }
 
   update(
     getComponent: (
