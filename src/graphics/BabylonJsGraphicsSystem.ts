@@ -29,6 +29,7 @@ import "@babylonjs/core/Materials/Node/Blocks";
 import "@babylonjs/core/assetContainer";
 
 interface BabylonJsMesh extends Component {
+  isLoadingModel?: boolean;
   mesh?: Mesh;
 }
 
@@ -42,8 +43,6 @@ interface BabylonJsMesh extends Component {
 export class BabylonJsGraphicsSystem implements System {
   #engine: Engine;
   #scene: Scene;
-
-  #initialLoad: boolean = true;
 
   constructor(
     private world: World,
@@ -96,54 +95,14 @@ export class BabylonJsGraphicsSystem implements System {
     ) => Component | undefined,
     getComponents: (componentType: ComponentType) => number[] | undefined
   ): void {
-    if (this.#initialLoad) {
-      this.#initialLoad = false;
-
-      // Load GLTFModel
-      getComponents(ComponentType.GLTFModel)?.map(async (entityId) => {
-        const model = getComponent(
-          ComponentType.GLTFModel,
-          entityId
-        )! as GLTFModel;
-        const component = getComponent(ComponentType.Component, entityId);
-        const assetArrayBuffer = await Tools.LoadFileAsync(
-          `${this.ipfsGatewayHost}/ipfs/${model.glTFModel}`,
-          true
-        );
-
-        const assetBlob = new Blob([assetArrayBuffer]);
-        const assetUrl = URL.createObjectURL(assetBlob);
-        const container = await SceneLoader.LoadAssetContainerAsync(
-          assetUrl,
-          undefined,
-          this.#scene,
-          undefined,
-          ".glb"
-        );
-
-        const mesh = container.createRootMesh();
-        console.debug("Loaded mesh: " + mesh);
-
-        // Save mesh to component
-        if (component) {
-          (component as BabylonJsMesh).mesh = mesh;
-        } else {
-          this.world.add_component_to_entity(
-            entityId,
-            ComponentType.Component,
-            { mesh }
-          );
-        }
-
-        this.#scene.addMesh(mesh, true);
-      });
-    }
-
     // Render meshes
-    getComponents(ComponentType.GLTFModel)?.map(async (entityId) => {
-      const mesh = getComponent(ComponentType.Component, entityId) as
-        | BabylonJsMesh
-        | undefined;
+    getComponents(ComponentType.GLTFModel)?.map((entityId) => {
+      const component = getComponent(ComponentType.Component, entityId);
+      const mesh = component as BabylonJsMesh;
+      const model = getComponent(
+        ComponentType.GLTFModel,
+        entityId
+      )! as GLTFModel;
       const position = getComponent(ComponentType.Position, entityId) as
         | Position
         | undefined;
@@ -154,7 +113,37 @@ export class BabylonJsGraphicsSystem implements System {
         | Scale
         | undefined;
 
-      if (mesh?.mesh) {
+      // Load model if needed
+      if (!mesh.isLoadingModel && !mesh.mesh) {
+        mesh.isLoadingModel = true;
+
+        Tools.LoadFileAsync(
+          `${this.ipfsGatewayHost}/ipfs/${model.glTFModel}`,
+          true
+        )
+          .then((assetArrayBuffer) => {
+            const assetBlob = new Blob([assetArrayBuffer]);
+            const assetUrl = URL.createObjectURL(assetBlob);
+            return SceneLoader.LoadAssetContainerAsync(
+              assetUrl,
+              undefined,
+              this.#scene,
+              undefined,
+              ".glb"
+            );
+          })
+          .then((container) => {
+            const rootMesh = container.createRootMesh();
+            console.debug("Loaded mesh: " + mesh);
+
+            mesh.mesh = rootMesh;
+
+            this.#scene.addMesh(rootMesh, true);
+            mesh.isLoadingModel = false;
+          });
+      }
+
+      if (mesh.mesh) {
         if (position) {
           mesh.mesh.position = new Vector3(
             (position.position ?? position.startPosition).x,
