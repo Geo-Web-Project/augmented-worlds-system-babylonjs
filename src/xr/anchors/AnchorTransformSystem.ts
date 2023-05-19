@@ -101,30 +101,34 @@ export class AnchorTransformSystem implements System {
             ) as Position)
           : undefined;
 
-      const anchorOrientationX = anchorOrientationXID
-        ? (getComponent(
-            ComponentType.Orientation,
-            anchorOrientationXID
-          ) as Orientation)
-        : undefined;
-      const anchorOrientationY = anchorOrientationYID
-        ? (getComponent(
-            ComponentType.Orientation,
-            anchorOrientationYID
-          ) as Orientation)
-        : undefined;
-      const anchorOrientationZ = anchorOrientationZID
-        ? (getComponent(
-            ComponentType.Orientation,
-            anchorOrientationZID
-          ) as Orientation)
-        : undefined;
-      const anchorOrientationW = anchorOrientationWID
-        ? (getComponent(
-            ComponentType.Orientation,
-            anchorOrientationWID
-          ) as Orientation)
-        : undefined;
+      const anchorOrientationX =
+        anchorOrientationXID !== undefined
+          ? (getComponent(
+              ComponentType.Orientation,
+              anchorOrientationXID
+            ) as Orientation)
+          : undefined;
+      const anchorOrientationY =
+        anchorOrientationYID !== undefined
+          ? (getComponent(
+              ComponentType.Orientation,
+              anchorOrientationYID
+            ) as Orientation)
+          : undefined;
+      const anchorOrientationZ =
+        anchorOrientationZID !== undefined
+          ? (getComponent(
+              ComponentType.Orientation,
+              anchorOrientationZID
+            ) as Orientation)
+          : undefined;
+      const anchorOrientationW =
+        anchorOrientationWID !== undefined
+          ? (getComponent(
+              ComponentType.Orientation,
+              anchorOrientationWID
+            ) as Orientation)
+          : undefined;
 
       if (
         anchorPositionX ||
@@ -162,7 +166,7 @@ export class AnchorTransformSystem implements System {
             1
         );
 
-        orientationCom.orientation = newOrientation.multiply(
+        orientationCom.orientation = newOrientation.add(
           new Quaternion(
             orientationCom.startOrientation?.x ?? 0,
             orientationCom.startOrientation?.y ?? 0,

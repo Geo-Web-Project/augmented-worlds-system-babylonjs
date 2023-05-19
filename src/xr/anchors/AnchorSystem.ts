@@ -71,24 +71,16 @@ export class AnchorSystem implements System, WebXRFeatureSystem {
         anchorCom.isCreatingAnchor = true;
 
         const position = new Vector3(
-          positionCom?.position?.x ?? positionCom?.startPosition?.x ?? 0,
-          positionCom?.position?.y ?? positionCom?.startPosition?.y ?? 0,
-          positionCom?.position?.z ?? positionCom?.startPosition?.z ?? 0
+          positionCom.startPosition.x,
+          positionCom.startPosition.y,
+          positionCom.startPosition.z
         );
 
         const orientation = new Quaternion(
-          orientationCom?.orientation?.x ??
-            orientationCom?.startOrientation?.x ??
-            0,
-          orientationCom?.orientation?.y ??
-            orientationCom?.startOrientation?.y ??
-            0,
-          orientationCom?.orientation?.z ??
-            orientationCom?.startOrientation?.z ??
-            0,
-          orientationCom?.orientation?.w ??
-            orientationCom?.startOrientation?.w ??
-            1
+          orientationCom.startOrientation.x,
+          orientationCom.startOrientation.y,
+          orientationCom.startOrientation.z,
+          orientationCom.startOrientation.w
         );
 
         this.#anchorSystem!.addAnchorAtPositionAndRotationAsync(

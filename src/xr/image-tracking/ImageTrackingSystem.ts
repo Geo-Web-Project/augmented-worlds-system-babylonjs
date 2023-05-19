@@ -121,10 +121,10 @@ export class ImageTrackingSystem implements System, WebXRFeatureSystem {
 
       if (!pose) {
         if (positionCom) {
-          positionCom.startPosition = undefined;
+          positionCom.position = undefined;
         }
         if (orientationCom) {
-          orientationCom.startOrientation = undefined;
+          orientationCom.orientation = undefined;
         }
         return;
       }
@@ -132,7 +132,7 @@ export class ImageTrackingSystem implements System, WebXRFeatureSystem {
       if (state == "tracked" || state == "emulated") {
         // TODO: Handle if position component does not exist?
         if (positionCom) {
-          positionCom.startPosition = {
+          positionCom.position = {
             x: pose.transform.position.x,
             y: pose.transform.position.y,
             z: pose.transform.position.z,
@@ -141,7 +141,7 @@ export class ImageTrackingSystem implements System, WebXRFeatureSystem {
 
         // TODO: Handle if orientation component does not exist?
         if (orientationCom) {
-          orientationCom.startOrientation = {
+          orientationCom.orientation = {
             x: pose.transform.orientation.x,
             y: pose.transform.orientation.y,
             z: pose.transform.orientation.z,
