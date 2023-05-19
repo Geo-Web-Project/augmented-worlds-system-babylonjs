@@ -31,6 +31,7 @@ import "@babylonjs/core/assetContainer";
 export interface BabylonJsMesh extends Component {
   isLoadingModel?: boolean;
   mesh?: Mesh;
+  isVisible?: boolean;
 }
 
 /*
@@ -140,13 +141,23 @@ export class GraphicsSystem implements System {
             console.debug("Loaded mesh: " + mesh);
 
             mesh.mesh = rootMesh;
-
-            this.#scene.addMesh(rootMesh, true);
             mesh.isLoadingModel = false;
+            mesh.isVisible = true;
           });
       }
 
       if (mesh.mesh) {
+        // console.log(mesh.isVisible);
+        const isMeshInScene = this.#scene.getMeshById(mesh.mesh.id) !== null;
+        // console.log(isMeshInScene);
+        if (mesh.isVisible === true && !isMeshInScene) {
+          this.#scene.addMesh(mesh.mesh, true);
+          console.debug("Added mesh to scene: " + mesh);
+        } else if (mesh.isVisible === false && isMeshInScene) {
+          this.#scene.removeMesh(mesh.mesh, true);
+          console.debug("Removed mesh from scene: " + mesh);
+        }
+
         if (position) {
           mesh.mesh.position = new Vector3(
             position.position?.x ?? position.startPosition?.x ?? 0,

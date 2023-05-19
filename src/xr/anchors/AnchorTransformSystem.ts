@@ -184,34 +184,28 @@ export class AnchorTransformSystem implements System {
         );
 
         const shouldShow =
-          (anchorPositionX
-            ? anchorPositionX?.startPosition !== undefined
-            : true) &&
-          (anchorPositionY
-            ? anchorPositionY?.startPosition !== undefined
-            : true) &&
-          (anchorPositionZ
-            ? anchorPositionZ?.startPosition !== undefined
-            : true) &&
+          (anchorPositionX ? anchorPositionX?.position !== undefined : true) &&
+          (anchorPositionY ? anchorPositionY?.position !== undefined : true) &&
+          (anchorPositionZ ? anchorPositionZ?.position !== undefined : true) &&
           (anchorOrientationX
-            ? anchorOrientationX?.startOrientation !== undefined
+            ? anchorOrientationX?.orientation !== undefined
             : true) &&
           (anchorOrientationY
-            ? anchorOrientationY?.startOrientation !== undefined
+            ? anchorOrientationY?.orientation !== undefined
             : true) &&
           (anchorOrientationZ
-            ? anchorOrientationZ?.startOrientation !== undefined
+            ? anchorOrientationZ?.orientation !== undefined
             : true) &&
           (anchorOrientationW
-            ? anchorOrientationW?.startOrientation !== undefined
+            ? anchorOrientationW?.orientation !== undefined
             : true);
 
         if (mesh.mesh) {
-          mesh.mesh.visibility = shouldShow ? 1 : 0;
+          mesh.isVisible = shouldShow;
         }
       } else if (mesh.mesh) {
         // Did not find anchor, mark not visible
-        mesh.mesh.visibility = 0;
+        mesh.isVisible = false;
       }
     });
   }
