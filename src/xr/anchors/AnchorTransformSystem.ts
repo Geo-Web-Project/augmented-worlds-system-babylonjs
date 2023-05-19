@@ -7,6 +7,7 @@ import {
   Anchor,
 } from "augmented-worlds";
 import { Vector3, Quaternion } from "@babylonjs/core/Maths/math";
+import { BabylonJsMesh } from "../../graphics";
 
 /*
  * AnchorTransformSystem
@@ -22,6 +23,8 @@ export class AnchorTransformSystem implements System {
     getComponents: (componentType: ComponentType) => number[] | undefined
   ): void {
     getComponents(ComponentType.Anchor)?.map((entityId) => {
+      const component = getComponent(ComponentType.Component, entityId);
+      const mesh = component as BabylonJsMesh;
       const anchorCom = getComponent(ComponentType.Anchor, entityId) as Anchor;
       const positionCom = getComponent(
         ComponentType.Position,
@@ -170,11 +173,41 @@ export class AnchorTransformSystem implements System {
 
         positionCom.position = newPosition.add(
           new Vector3(
-            positionCom.startPosition.x,
-            positionCom.startPosition.y,
-            positionCom.startPosition.z
+            positionCom.startPosition?.x ?? 0,
+            positionCom.startPosition?.y ?? 0,
+            positionCom.startPosition?.z ?? 0
           ).applyRotationQuaternion(newOrientation)
         );
+
+        const shouldShow =
+          (anchorPositionX
+            ? anchorPositionX?.startPosition !== undefined
+            : true) &&
+          (anchorPositionY
+            ? anchorPositionY?.startPosition !== undefined
+            : true) &&
+          (anchorPositionZ
+            ? anchorPositionZ?.startPosition !== undefined
+            : true) &&
+          (anchorOrientationX
+            ? anchorOrientationX?.startOrientation !== undefined
+            : true) &&
+          (anchorOrientationY
+            ? anchorOrientationY?.startOrientation !== undefined
+            : true) &&
+          (anchorOrientationZ
+            ? anchorOrientationZ?.startOrientation !== undefined
+            : true) &&
+          (anchorOrientationW
+            ? anchorOrientationW?.startOrientation !== undefined
+            : true);
+
+        if (mesh.mesh) {
+          mesh.mesh.visibility = shouldShow ? 1 : 0;
+        }
+      } else if (mesh.mesh) {
+        // Did not find anchor, mark not visible
+        mesh.mesh.visibility = 0;
       }
     });
   }

@@ -28,19 +28,19 @@ import "@babylonjs/core/Animations/animatable";
 import "@babylonjs/core/Materials/Node/Blocks";
 import "@babylonjs/core/assetContainer";
 
-interface BabylonJsMesh extends Component {
+export interface BabylonJsMesh extends Component {
   isLoadingModel?: boolean;
   mesh?: Mesh;
 }
 
 /*
- * BabylonJsGraphicsSystem
+ * GraphicsSystem
  *
  * - Creates a BabylonJs engine, scene, camera, and light
  * - Binds render loop to World
  * - TODO: Render models
  */
-export class BabylonJsGraphicsSystem implements System {
+export class GraphicsSystem implements System {
   #engine: Engine;
   #scene: Scene;
 
@@ -79,6 +79,9 @@ export class BabylonJsGraphicsSystem implements System {
   }
 
   start() {
+    // Perform a single update first
+    this.world.update();
+
     // Bind render loop to World
     this.#engine.runRenderLoop(() => {
       this.world.update();
@@ -118,7 +121,7 @@ export class BabylonJsGraphicsSystem implements System {
         mesh.isLoadingModel = true;
 
         Tools.LoadFileAsync(
-          `${this.ipfsGatewayHost}/ipfs/${model.glTFModel}`,
+          `${this.ipfsGatewayHost}/ipfs/${model.glTFModel["/"]}`,
           true
         )
           .then((assetArrayBuffer) => {
@@ -146,9 +149,9 @@ export class BabylonJsGraphicsSystem implements System {
       if (mesh.mesh) {
         if (position) {
           mesh.mesh.position = new Vector3(
-            (position.position ?? position.startPosition).x,
-            (position.position ?? position.startPosition).y,
-            (position.position ?? position.startPosition).z
+            position.position?.x ?? position.startPosition?.x ?? 0,
+            position.position?.y ?? position.startPosition?.y ?? 0,
+            position.position?.z ?? position.startPosition?.z ?? 0
           );
         } else {
           mesh.mesh.position = new Vector3(0, 0, 0);
@@ -156,10 +159,10 @@ export class BabylonJsGraphicsSystem implements System {
 
         if (orientation) {
           mesh.mesh.rotationQuaternion = new Quaternion(
-            (orientation.orientation ?? orientation.startOrientation).x,
-            (orientation.orientation ?? orientation.startOrientation).y,
-            (orientation.orientation ?? orientation.startOrientation).z,
-            (orientation.orientation ?? orientation.startOrientation).w
+            orientation.orientation?.x ?? orientation.startOrientation?.x ?? 0,
+            orientation.orientation?.y ?? orientation.startOrientation?.y ?? 0,
+            orientation.orientation?.z ?? orientation.startOrientation?.z ?? 0,
+            orientation.orientation?.w ?? orientation.startOrientation?.w ?? 1
           );
         } else {
           mesh.mesh.rotationQuaternion = new Quaternion(0, 0, 0, 1);
@@ -167,9 +170,9 @@ export class BabylonJsGraphicsSystem implements System {
 
         if (scale) {
           mesh.mesh.scaling = new Vector3(
-            (scale.scale ?? scale.startScale).x,
-            (scale.scale ?? scale.startScale).y,
-            (scale.scale ?? scale.startScale).z
+            scale.scale?.x ?? scale.startScale?.x ?? 0,
+            scale.scale?.y ?? scale.startScale?.y ?? 0,
+            scale.scale?.z ?? scale.startScale?.z ?? 0
           );
         } else {
           mesh.mesh.scaling = new Vector3(1, 1, 1);

@@ -1,2 +1,2 @@
-export * from "./BabylonJsWebXRAnchorSystem";
+export * from "./AnchorSystem";
 export * from "./AnchorTransformSystem";

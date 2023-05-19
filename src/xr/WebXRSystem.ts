@@ -15,18 +15,20 @@ import "@babylonjs/loaders/glTF";
 import "@babylonjs/core/Animations/animatable";
 import "@babylonjs/core/Materials/Node/Blocks";
 
+export interface WebXRFeatureSystem {
+  initializeFeature(): Promise<void>;
+}
+
 /*
  * BabylonJsWebXRSystem
  *
  * - Attaches a WebXR session to a BabylonJS Scene
  * - Does nothing in the update loop
  */
-export class BabylonJsWebXRSystem implements System {
+export class WebXRSystem implements System {
   #scene: Scene;
   #xrHelperP: Promise<WebXRExperienceHelper>;
-  #sessionManager?: WebXRSessionManager;
-
-  #requiredFeatures: string[] = ["local"];
+  #featureSystems: WebXRFeatureSystem[] = [];
 
   constructor(scene: Scene) {
     this.#scene = scene;
@@ -35,32 +37,30 @@ export class BabylonJsWebXRSystem implements System {
     this.#xrHelperP = WebXRExperienceHelper.CreateAsync(this.#scene);
   }
 
-  addFeature(feature: string) {
-    this.#requiredFeatures.push(feature);
+  addFeatureSystem(featureSystem: WebXRFeatureSystem) {
+    this.#featureSystems.push(featureSystem);
   }
 
   async startXRSession() {
     const xrHelper = await this.#xrHelperP;
 
-    // TODO: Allow for custom XR config
-    this.#sessionManager = await xrHelper.enterXRAsync(
-      "immersive-ar",
-      "local",
-      undefined,
-      {
-        requiredFeatures: this.#requiredFeatures,
-      }
-    );
+    for (const featureSystem of this.#featureSystems) {
+      await featureSystem.initializeFeature();
+    }
+
+    await xrHelper.enterXRAsync("immersive-ar", "local", undefined, {
+      requiredFeatures: ["local"],
+    });
   }
 
-  getXRSessionManager(): WebXRSessionManager | undefined {
-    return this.#sessionManager;
+  async getXRSessionManager(): Promise<WebXRSessionManager> {
+    const xrHelper = await this.#xrHelperP;
+    return xrHelper.sessionManager;
   }
 
-  getXRFeaturesManager(): WebXRFeaturesManager | undefined {
-    if (!this.#sessionManager) return;
-
-    return new WebXRFeaturesManager(this.#sessionManager);
+  async getXRFeaturesManager(): Promise<WebXRFeaturesManager> {
+    const xrHelper = await this.#xrHelperP;
+    return xrHelper.featuresManager;
   }
 
   update(

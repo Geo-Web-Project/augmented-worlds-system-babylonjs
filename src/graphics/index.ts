@@ -1,1 +1,1 @@
-export * from "./BabylonJsGraphicsSystem";
+export * from "./GraphicsSystem";

@@ -5,28 +5,42 @@ import {
   Position,
   Orientation,
 } from "augmented-worlds";
-import { BabylonJsWebXRSystem } from "../";
+import { WebXRSystem, WebXRFeatureSystem } from "../";
 import {
   WebXRAnchorSystem,
   IWebXRAnchor,
 } from "@babylonjs/core/XR/features/WebXRAnchorSystem";
 import { Vector3, Quaternion } from "@babylonjs/core/Maths/math";
+import { WebXRSessionManager } from "@babylonjs/core/XR/webXRSessionManager";
 
-interface BabylonJsWebXRAnchor extends Component {
+interface WebXRAnchor extends Component {
   isCreatingAnchor?: boolean;
   webXRAnchor?: IWebXRAnchor;
 }
 
 /*
- * BabylonJsWebXRAnchorSystem
+ * AnchorSystem
  *
  * - Creates WebXR anchors for IsAnchor components
  */
-export class BabylonJsWebXRAnchorSystem implements System {
+export class AnchorSystem implements System, WebXRFeatureSystem {
   #anchorSystem?: WebXRAnchorSystem;
+  #sessionManager?: WebXRSessionManager;
 
-  constructor(private webXRSystem: BabylonJsWebXRSystem) {
-    webXRSystem.addFeature("anchors");
+  constructor(private webXRSystem: WebXRSystem) {
+    webXRSystem.addFeatureSystem(this);
+  }
+
+  async initializeFeature() {
+    const featuresManager = await this.webXRSystem.getXRFeaturesManager();
+
+    // Enable Anchors feature
+    this.#anchorSystem = featuresManager.enableFeature(
+      WebXRAnchorSystem,
+      "latest"
+    ) as WebXRAnchorSystem;
+
+    this.#sessionManager = await this.webXRSystem.getXRSessionManager();
   }
 
   update(
@@ -36,21 +50,11 @@ export class BabylonJsWebXRAnchorSystem implements System {
     ) => Component | undefined,
     getComponents: (componentType: ComponentType) => number[] | undefined
   ): void {
-    const sessionManager = this.webXRSystem.getXRSessionManager();
-    const featuresManager = this.webXRSystem.getXRFeaturesManager();
-    if (!featuresManager || !sessionManager) return;
-
-    // Enable Anchors feature
-    if (this.#anchorSystem === undefined) {
-      this.#anchorSystem = featuresManager.enableFeature(
-        WebXRAnchorSystem,
-        "latest"
-      ) as WebXRAnchorSystem;
-    }
+    if (!this.#sessionManager) return;
 
     getComponents(ComponentType.IsAnchor)?.map((entityId) => {
       const component = getComponent(ComponentType.Component, entityId);
-      const anchorCom = component as BabylonJsWebXRAnchor;
+      const anchorCom = component as WebXRAnchor;
       const positionCom = getComponent(ComponentType.Position, entityId) as
         | Position
         | undefined;
@@ -58,6 +62,9 @@ export class BabylonJsWebXRAnchorSystem implements System {
         ComponentType.Orientation,
         entityId
       ) as Orientation | undefined;
+
+      if (!positionCom?.startPosition) return;
+      if (!orientationCom?.startOrientation) return;
 
       // Create anchor if does not exist
       if (!anchorCom.isCreatingAnchor && !anchorCom.webXRAnchor) {
@@ -103,13 +110,13 @@ export class BabylonJsWebXRAnchorSystem implements System {
       }
 
       // Update transform
-      const frame = sessionManager.currentFrame;
+      const frame = this.#sessionManager!.currentFrame;
       if (!frame || !anchorCom.webXRAnchor) return;
 
       // Get pose of anchor
       const pose = frame.getPose(
         anchorCom.webXRAnchor.xrAnchor.anchorSpace,
-        sessionManager.referenceSpace
+        this.#sessionManager!.referenceSpace
       );
 
       if (pose) {
