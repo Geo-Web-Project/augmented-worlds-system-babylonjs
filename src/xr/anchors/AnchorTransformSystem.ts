@@ -166,7 +166,7 @@ export class AnchorTransformSystem implements System {
             1
         );
 
-        orientationCom.orientation = newOrientation.add(
+        orientationCom.orientation = newOrientation.multiply(
           new Quaternion(
             orientationCom.startOrientation?.x ?? 0,
             orientationCom.startOrientation?.y ?? 0,
