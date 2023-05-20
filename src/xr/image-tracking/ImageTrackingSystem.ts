@@ -11,9 +11,8 @@ import { WebXRImageTracking } from "@babylonjs/core/XR/features/WebXRImageTracki
 import { Tools } from "@babylonjs/core/Misc/tools";
 import { WebXRSessionManager } from "@babylonjs/core/XR/webXRSessionManager";
 
-interface WebXRImageTarget extends Component {
+export interface WebXRImageTarget extends Component {
   isLoadingImage?: boolean;
-  imageBitmap?: ImageBitmap;
 }
 
 type WebXRImageConfig = {
@@ -79,7 +78,7 @@ export class ImageTrackingSystem implements System, WebXRFeatureSystem {
       ) as Orientation | undefined;
 
       // Load image if needed
-      if (!imageTarget.isLoadingImage && !imageTarget.imageBitmap) {
+      if (!imageTarget.isLoadingImage) {
         imageTarget.isLoadingImage = true;
 
         const imageP = Tools.LoadFileAsync(
