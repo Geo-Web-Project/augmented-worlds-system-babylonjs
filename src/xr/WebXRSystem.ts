@@ -37,6 +37,10 @@ export class WebXRSystem implements System {
     this.#xrHelperP = WebXRExperienceHelper.CreateAsync(this.#scene);
   }
 
+  static async isSupported(): Promise<boolean> {
+    return WebXRSessionManager.IsSessionSupportedAsync("immersive-ar");
+  }
+
   addFeatureSystem(featureSystem: WebXRFeatureSystem) {
     this.#featureSystems.push(featureSystem);
   }
