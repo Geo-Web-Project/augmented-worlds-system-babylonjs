@@ -68,11 +68,6 @@ export class GraphicsSystem implements System {
       this.#scene
     );
     light.intensity = 0.7;
-
-    // Watch for browser/canvas resize events
-    window.addEventListener("resize", () => {
-      engine.resize();
-    });
   }
 
   getScene(): Scene {
