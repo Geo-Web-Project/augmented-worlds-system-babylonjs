@@ -7,13 +7,7 @@ import { Vector3 } from "@babylonjs/core/Maths/math";
 import { WebXRAbstractFeature } from "@babylonjs/core/XR/features/WebXRAbstractFeature";
 import { WebXRFeaturesManager } from "@babylonjs/core/XR/webXRFeaturesManager";
 import { Observable } from "@babylonjs/core/Misc/observable";
-import { CID } from "multiformats/cid";
 import { base64 } from "multiformats/bases/base64";
-import type { UnixFS } from "@helia/unixfs";
-import { unixfs } from "@helia/unixfs";
-import type { DAGCBOR } from "@helia/dag-cbor";
-import { dagCbor } from "@helia/dag-cbor";
-import type { Blocks } from "@helia/interface/blocks";
 
 class WebXRCameraAccessFeature extends WebXRAbstractFeature {
   static readonly Name = "xr-camera-access";
@@ -28,6 +22,11 @@ class WebXRCameraAccessFeature extends WebXRAbstractFeature {
   _onXRFrame(_frame: XRFrame) {}
 }
 
+export type ImageAnchorCapture = {
+  imageBytes: Uint8Array;
+  physicalWidth: number;
+};
+
 /*
  * ImageCaptureSystem
  *
@@ -38,22 +37,17 @@ export class ImageCaptureSystem implements System, WebXRFeatureSystem {
   #hitTestSource?: XRHitTestSource;
   #isLoadingHitTestSource: boolean = false;
   #isCapturingImage: boolean = false;
-  #unixfs: UnixFS;
-  #dagCbor: DAGCBOR;
 
-  onImageAnchorCaptured: Observable<CID>;
+  onImageAnchorCaptured: Observable<ImageAnchorCapture>;
 
   static NO_PLANE_FOUND_TEXT = "No Plane Detected";
 
   constructor(
     private webXRSystem: WebXRSystem,
-    private domOverlayElement: HTMLElement,
-    blockstore: Blocks
+    private domOverlayElement: HTMLElement
   ) {
     webXRSystem.addFeatureSystem(this);
 
-    this.#unixfs = unixfs({ blockstore });
-    this.#dagCbor = dagCbor({ blockstore });
     this.onImageAnchorCaptured = new Observable();
   }
 
@@ -362,29 +356,24 @@ export class ImageCaptureSystem implements System, WebXRFeatureSystem {
         .getElementById("scanner-button")!
         .setAttribute("disabled", "true");
 
-      const width = this._calculateBoundingBoxWidth(frame);
+      const physicalWidth = this._calculateBoundingBoxWidth(frame);
+      if (!physicalWidth) {
+        console.warn("Could not calculate physical width of image");
+        return;
+      }
 
-      (async () => {
-        const dataUrl = cropCanvas.toDataURL("image/png");
+      const dataUrl = cropCanvas.toDataURL("image/png");
 
-        // Convert dataUrl to base64 string
-        const base64String = dataUrl.split(",")[1];
-        // Decode base64 string
-        const imageBytes = base64.baseDecode(base64String);
+      // Convert dataUrl to base64 string
+      const base64String = dataUrl.split(",")[1];
+      // Decode base64 string
+      const imageBytes = base64.baseDecode(base64String);
+      this.onImageAnchorCaptured.notifyObservers({
+        imageBytes,
+        physicalWidth,
+      });
 
-        const imgCid = await this.#unixfs.addBytes(imageBytes);
-
-        const anchorCid = await this.#dagCbor.add({
-          isAnchor: true,
-          trackedImage: {
-            imageAsset: imgCid,
-            physicalWidthInMeters: width,
-          },
-        });
-        this.onImageAnchorCaptured.notifyObservers(anchorCid);
-
-        this.#isCapturingImage = true;
-      })();
+      this.#isCapturingImage = true;
     });
   }
 }

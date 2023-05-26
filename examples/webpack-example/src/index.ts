@@ -18,9 +18,6 @@ import {
   CoachingOverlaySystem,
   ImageCaptureSystem,
 } from "@augmented-worlds/system-babylonjs";
-import { createHelia } from "helia";
-import { dagCbor } from "@helia/dag-cbor";
-import { createLibp2p } from "libp2p";
 
 init()
   .then(() => {
@@ -37,11 +34,8 @@ init()
       ).disabled = true;
       return;
     }
-    return createHelia({ start: false });
   })
-  .then((helia) => {
-    if (!helia) return;
-
+  .then(() => {
     const world = new World();
 
     // const testAnchor = world.create_entity();
@@ -132,13 +126,11 @@ init()
     // );
     const imageCaptureSystem = new ImageCaptureSystem(
       webXRSystem,
-      document.querySelector("div#overlay")!,
-      helia.blockstore
+      document.querySelector("div#overlay")!
     );
 
-    imageCaptureSystem.onImageAnchorCaptured.add((cid) => {
-      const d = dagCbor(helia);
-      d.get(cid).then(console.log);
+    imageCaptureSystem.onImageAnchorCaptured.add((imageAnchorCapture) => {
+      console.log(imageAnchorCapture);
     });
     world.add_system(graphicsSystem);
     world.add_system(webXRSystem);
