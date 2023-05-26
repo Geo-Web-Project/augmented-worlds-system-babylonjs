@@ -21,6 +21,7 @@ import "swiper/css/navigation";
 export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
   #swiper: Swiper;
   #isLoadingImages: boolean = false;
+  #innerDomOverlay: HTMLElement;
 
   constructor(
     private webXRSystem: WebXRSystem,
@@ -33,22 +34,19 @@ export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
     domOverlayElement.style.flexDirection = "column-reverse";
     domOverlayElement.style.paddingBottom = "50px";
 
+    this.#innerDomOverlay = document.createElement("span");
+    this.#innerDomOverlay.style.display = "flex";
+    this.#innerDomOverlay.style.flexDirection = "column-reverse";
+
     // Create coaching text
     const p = document.createElement("p");
     p.id = "coaching-overlay-text";
-    p.style.color = "white";
-    p.style.marginLeft = "20px";
-    p.style.marginRight = "20px";
-    p.style.textAlign = "center";
-    p.style.fontSize = "1.5em";
 
-    this.domOverlayElement.appendChild(p);
+    this.#innerDomOverlay.appendChild(p);
 
     // Create Swiper
     const swiper = document.createElement("div");
     swiper.classList.add("swiper");
-    swiper.style.setProperty("--swiper-navigation-color", "white");
-    swiper.style.width = "100vw";
 
     const swiperWrapper = document.createElement("div");
     swiperWrapper.classList.add("swiper-wrapper");
@@ -63,7 +61,7 @@ export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
     swiper.appendChild(swiperButtonNext);
     swiper.appendChild(swiperButtonPrev);
 
-    domOverlayElement.appendChild(swiper);
+    this.#innerDomOverlay.appendChild(swiper);
 
     this.#swiper = new Swiper(".swiper", {
       modules: [Navigation],
@@ -72,6 +70,8 @@ export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
         prevEl: ".swiper-button-prev",
       },
     });
+
+    domOverlayElement.appendChild(this.#innerDomOverlay);
   }
 
   async initializeFeature() {
@@ -113,9 +113,9 @@ export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
       }, false);
 
       if (foundImage) {
-        this.domOverlayElement.style.visibility = "hidden";
+        this.#innerDomOverlay.style.visibility = "hidden";
       } else {
-        this.domOverlayElement.style.visibility = "visible";
+        this.#innerDomOverlay.style.visibility = "visible";
       }
 
       // Load images if needed

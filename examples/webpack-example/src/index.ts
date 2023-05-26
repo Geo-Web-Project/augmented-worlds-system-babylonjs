@@ -21,6 +21,8 @@ import {
   ModelScalingSystem,
 } from "@augmented-worlds/system-babylonjs";
 
+import "@augmented-worlds/system-babylonjs/styles.css";
+
 init()
   .then(() => {
     return WebXRSystem.isSupported();
@@ -155,10 +157,21 @@ init()
     world.add_system(modelScalingSystem);
     // world.add_system(imageCaptureSystem);
 
+    document.getElementById("overlay")!.style.display = "none";
+
+    document
+      .querySelector("canvas#renderCanvas")!
+      .setAttribute("hidden", "true");
+
+    graphicsSystem.start();
+
     document
       .querySelector("button#arButton")
       ?.addEventListener("click", (_) => {
-        graphicsSystem.start();
         webXRSystem.startXRSession();
+        document
+          .querySelector("canvas#renderCanvas")!
+          .removeAttribute("hidden");
+        document.getElementById("overlay")!.style.display = "flex";
       });
   });

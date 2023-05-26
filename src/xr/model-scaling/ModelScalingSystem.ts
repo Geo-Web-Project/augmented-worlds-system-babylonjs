@@ -17,6 +17,7 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
   #isDecreasing: boolean = false;
   #shouldIncreaseStep: boolean = false;
   #shouldDecreseStep: boolean = false;
+  #shouldUpdateText: boolean = false;
 
   onModelScaleChanged: Observable<number>;
 
@@ -33,6 +34,7 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
 
     // Buttons
     const addButton = document.createElement("button");
+    addButton.classList.add("sizing-button");
     addButton.innerText = "+";
     addButton.ontouchstart = () => {
       addButton.style.opacity = "0.5";
@@ -48,6 +50,7 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
     };
 
     const removeButton = document.createElement("button");
+    removeButton.classList.add("sizing-button");
     removeButton.innerText = "-";
     removeButton.ontouchstart = () => {
       removeButton.style.opacity = "0.5";
@@ -62,23 +65,26 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
       };
     };
 
-    for (const button of [addButton, removeButton]) {
-      button.classList.add("sizing-button");
-      button.style.width = "48px";
-      button.style.height = "48px";
-      button.style.padding = "5px";
-      button.style.fontSize = "2em";
-      button.style.margin = "10px";
-    }
-
     // Text field
+    const inputSpan = document.createElement("span");
+    inputSpan.classList.add("scaling-span");
+
     this.#textField = document.createElement("input");
+    this.#textField.type = "number";
     this.#textField.classList.add("scaling-input");
-    this.#textField.style.width = "100px";
-    this.#textField.style.height = "48px";
-    this.#textField.style.fontSize = "2em";
-    this.#textField.style.textAlign = "center";
-    this.#textField.disabled = true;
+    this.#textField.oninput = () => {
+      this.#shouldUpdateText = true;
+    };
+
+    this.#textField.onfocus = () => {
+      this.domOverlayElement.style.paddingBottom = "300px";
+    };
+
+    this.#textField.onblur = () => {
+      this.domOverlayElement.style.paddingBottom = "50px";
+    };
+
+    inputSpan.appendChild(this.#textField);
 
     const sizing = document.createElement("div");
     sizing.style.display = "flex";
@@ -86,7 +92,7 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
     sizing.style.alignItems = "center";
 
     sizing.appendChild(removeButton);
-    sizing.appendChild(this.#textField);
+    sizing.appendChild(inputSpan);
     sizing.appendChild(addButton);
 
     // Create coaching text
@@ -127,6 +133,13 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
       this.modelEntityId
     ) as Scale;
 
+    if (this.#shouldUpdateText && !isNaN(this.#textField.value as any)) {
+      const newScale = Number(this.#textField.value) / 100;
+      scale.scale = new Vector3(newScale, newScale, newScale);
+      this.onModelScaleChanged.notifyObservers(newScale);
+      this.#shouldUpdateText = false;
+    }
+
     if (this.#isIncreasing || this.#shouldIncreaseStep) {
       const amount = this.#shouldIncreaseStep ? 0.01 : 0.02;
       const newScale = (scale.scale?.x ?? scale.startScale?.x ?? 1) + amount;
@@ -143,9 +156,9 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
       this.onModelScaleChanged.notifyObservers(newScale);
     }
 
-    this.#textField.value = `${(
+    this.#textField.value = (
       (scale.scale?.x ?? scale.startScale?.x ?? 1) * 100
-    ).toFixed(0)} %`;
+    ).toFixed(0);
 
     if (mesh?.isVisible) {
       this.domOverlayElement.style.visibility = "visible";

@@ -16,7 +16,6 @@ import { FreeCamera } from "@babylonjs/core/Cameras/freeCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
 import { Tools } from "@babylonjs/core/Misc/tools";
-// import { MeshBuilder } from "@babylonjs/core/Meshes/meshBuilder";
 import { Mesh } from "@babylonjs/core/Meshes/mesh";
 
 // Side-effects only imports allowing the standard material to be used as default.
@@ -50,8 +49,6 @@ export class GraphicsSystem implements System {
     canvas: HTMLCanvasElement,
     private ipfsGatewayHost: string
   ) {
-    canvas.setAttribute("hidden", "true");
-
     // Setup BabylonJS engine and scene
     const engine = new Engine(canvas, true);
     this.#engine = engine;
@@ -83,7 +80,6 @@ export class GraphicsSystem implements System {
       this.world.update();
     });
 
-    this.#engine.getRenderingCanvas()?.removeAttribute("hidden");
     this.#engine.resize();
   }
 
@@ -133,24 +129,21 @@ export class GraphicsSystem implements System {
           })
           .then((container) => {
             const rootMesh = container.createRootMesh();
-            console.debug("Loaded mesh: " + mesh);
+            console.debug("Loaded mesh: " + model.glTFModel["/"]);
 
             mesh.mesh = rootMesh;
             mesh.isLoadingModel = false;
             mesh.isVisible = true;
+
+            container.addAllToScene();
           });
       }
 
       if (mesh.mesh) {
-        // console.log(mesh.isVisible);
-        const isMeshInScene = this.#scene.getMeshById(mesh.mesh.id) !== null;
-        // console.log(isMeshInScene);
-        if (mesh.isVisible === true && !isMeshInScene) {
-          this.#scene.addMesh(mesh.mesh, true);
-          console.debug("Added mesh to scene: " + mesh);
-        } else if (mesh.isVisible === false && isMeshInScene) {
-          this.#scene.removeMesh(mesh.mesh, true);
-          console.debug("Removed mesh from scene: " + mesh);
+        if (mesh.isVisible && mesh.mesh.isEnabled() == false) {
+          mesh.mesh.setEnabled(true);
+        } else if (mesh.isVisible == false && mesh.mesh.isEnabled()) {
+          mesh.mesh.setEnabled(false);
         }
 
         if (position) {

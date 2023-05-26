@@ -6,6 +6,10 @@
   "module": "dist/index",
   "esnext": "dist/index",
   "types": "dist/index",
+  "exports": {
+    ".": "./dist/index",
+    "./styles.css": "./styles.css"
+  },
   "files": [
     "dist"
   ],
