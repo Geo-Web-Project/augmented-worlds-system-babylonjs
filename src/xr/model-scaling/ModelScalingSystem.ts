@@ -1,8 +1,6 @@
 import { ComponentType, Component, System, Scale } from "augmented-worlds";
 import { WebXRSystem, WebXRFeatureSystem } from "../";
-import { WebXRDomOverlay } from "@babylonjs/core/XR/features/WebXRDOMOverlay";
-import { Vector3 } from "@babylonjs/core/Maths/math";
-import { Observable } from "@babylonjs/core/Misc/observable";
+import { WebXRDomOverlay, Vector3, Observable } from "@babylonjs/core";
 import { BabylonJsMesh } from "../../graphics";
 /*
  * ModelScalingSystem

@@ -7,7 +7,7 @@ import {
   TrackedImage,
 } from "augmented-worlds";
 import { WebXRSystem, WebXRFeatureSystem } from "../";
-import { WebXRDomOverlay } from "@babylonjs/core/XR/features/WebXRDOMOverlay";
+import { WebXRDomOverlay } from "@babylonjs/core";
 import Swiper, { Navigation } from "swiper";
 
 /*

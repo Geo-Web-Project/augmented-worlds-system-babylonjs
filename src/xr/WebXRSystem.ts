@@ -1,19 +1,14 @@
 import { ComponentType, Component, System } from "augmented-worlds";
 
 import { Scene } from "@babylonjs/core/scene";
-import { WebXRExperienceHelper } from "@babylonjs/core/XR/webXRExperienceHelper";
-import { WebXRSessionManager } from "@babylonjs/core/XR/webXRSessionManager";
-import { WebXRFeaturesManager } from "@babylonjs/core/XR/webXRFeaturesManager";
+import {
+  WebXRExperienceHelper,
+  WebXRSessionManager,
+  WebXRFeaturesManager,
+} from "@babylonjs/core";
 
 // import { Tools } from "@babylonjs/core/Misc/tools";
 // import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
-
-// Side-effects only imports allowing the standard material to be used as default.
-import "@babylonjs/core/Materials/standardMaterial";
-import "@babylonjs/core/Loading/loadingScreen";
-import "@babylonjs/loaders/glTF";
-import "@babylonjs/core/Animations/animatable";
-import "@babylonjs/core/Materials/Node/Blocks";
 
 export interface WebXRFeatureSystem {
   initializeFeature(): Promise<void>;

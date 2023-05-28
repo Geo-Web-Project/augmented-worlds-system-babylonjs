@@ -1,1 +1,1 @@
-export * from "./GraphicsSystem";
+export * from "./GraphicsSystem.js";

@@ -1,1 +1,1 @@
-export * from "./ModelScalingSystem";
+export * from "./ModelScalingSystem.js";

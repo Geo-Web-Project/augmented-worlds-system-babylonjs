@@ -1,1 +1,1 @@
-export * from "./CoachingOverlaySystem";
+export * from "./CoachingOverlaySystem.js";

@@ -7,9 +7,11 @@ import {
   TrackedImage,
 } from "augmented-worlds";
 import { WebXRSystem, WebXRFeatureSystem } from "../";
-import { WebXRImageTracking } from "@babylonjs/core/XR/features/WebXRImageTracking";
-import { Tools } from "@babylonjs/core/Misc/tools";
-import { WebXRSessionManager } from "@babylonjs/core/XR/webXRSessionManager";
+import {
+  WebXRImageTracking,
+  Tools,
+  WebXRSessionManager,
+} from "@babylonjs/core";
 
 export interface WebXRImageTarget extends Component {
   isLoadingImage?: boolean;

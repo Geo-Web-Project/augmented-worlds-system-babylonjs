@@ -9,9 +9,10 @@ import { WebXRSystem, WebXRFeatureSystem } from "../";
 import {
   WebXRAnchorSystem,
   IWebXRAnchor,
-} from "@babylonjs/core/XR/features/WebXRAnchorSystem";
-import { Vector3, Quaternion } from "@babylonjs/core/Maths/math";
-import { WebXRSessionManager } from "@babylonjs/core/XR/webXRSessionManager";
+  Vector3,
+  Quaternion,
+  WebXRSessionManager,
+} from "@babylonjs/core";
 
 interface WebXRAnchor extends Component {
   isCreatingAnchor?: boolean;

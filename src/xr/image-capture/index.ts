@@ -1,1 +1,1 @@
-export * from "./ImageCaptureSystem";
+export * from "./ImageCaptureSystem.js";

@@ -1,12 +1,14 @@
 import { ComponentType, Component, System } from "augmented-worlds";
 import { WebXRSystem, WebXRFeatureSystem } from "../";
-import { WebXRDomOverlay } from "@babylonjs/core/XR/features/WebXRDOMOverlay";
-import { WebXRHitTest } from "@babylonjs/core/XR/features/WebXRHitTest";
-import { WebXRSessionManager } from "@babylonjs/core/XR/webXRSessionManager";
-import { Vector3 } from "@babylonjs/core/Maths/math";
-import { WebXRAbstractFeature } from "@babylonjs/core/XR/features/WebXRAbstractFeature";
-import { WebXRFeaturesManager } from "@babylonjs/core/XR/webXRFeaturesManager";
-import { Observable } from "@babylonjs/core/Misc/observable";
+import {
+  WebXRDomOverlay,
+  WebXRHitTest,
+  WebXRSessionManager,
+  Vector3,
+  WebXRAbstractFeature,
+  WebXRFeaturesManager,
+  Observable,
+} from "@babylonjs/core";
 import { base64 } from "multiformats/bases/base64";
 
 class WebXRCameraAccessFeature extends WebXRAbstractFeature {

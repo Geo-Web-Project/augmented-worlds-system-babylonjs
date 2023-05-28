@@ -9,23 +9,26 @@ import {
   Scale,
 } from "augmented-worlds";
 
-import { Engine } from "@babylonjs/core/Engines/engine";
-import { Scene } from "@babylonjs/core/scene";
-import { Vector3, Quaternion } from "@babylonjs/core/Maths/math";
-import { FreeCamera } from "@babylonjs/core/Cameras/freeCamera";
-import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
-import { SceneLoader } from "@babylonjs/core/Loading/sceneLoader";
-import { Tools } from "@babylonjs/core/Misc/tools";
-import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import {
+  Engine,
+  Scene,
+  Vector3,
+  Quaternion,
+  FreeCamera,
+  HemisphericLight,
+  SceneLoader,
+  Tools,
+  Mesh,
+} from "@babylonjs/core";
 
 // Side-effects only imports allowing the standard material to be used as default.
-import "@babylonjs/core/Materials/standardMaterial";
-import "@babylonjs/core/Meshes/Builders/groundBuilder";
-import "@babylonjs/core/Loading/loadingScreen";
-import "@babylonjs/loaders/glTF";
-import "@babylonjs/core/Animations/animatable";
-import "@babylonjs/core/Materials/Node/Blocks";
-import "@babylonjs/core/assetContainer";
+import "@babylonjs/core/Materials/standardMaterial.js";
+import "@babylonjs/core/Meshes/Builders/groundBuilder.js";
+import "@babylonjs/core/Loading/loadingScreen.js";
+import "@babylonjs/loaders/glTF/index.js";
+import "@babylonjs/core/Animations/animatable.js";
+import "@babylonjs/core/Materials/Node/Blocks/index.js";
+import "@babylonjs/core/assetContainer.js";
 
 export interface BabylonJsMesh extends Component {
   isLoadingModel?: boolean;

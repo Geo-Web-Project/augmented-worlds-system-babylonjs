@@ -1,1 +1,1 @@
-export * from "./ImageTrackingSystem";
+export * from "./ImageTrackingSystem.js";

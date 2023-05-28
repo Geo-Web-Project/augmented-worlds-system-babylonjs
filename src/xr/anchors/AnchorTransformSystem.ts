@@ -6,7 +6,7 @@ import {
   Orientation,
   Anchor,
 } from "augmented-worlds";
-import { Vector3, Quaternion } from "@babylonjs/core/Maths/math";
+import { Vector3, Quaternion } from "@babylonjs/core";
 import { BabylonJsMesh } from "../../graphics";
 
 /*
