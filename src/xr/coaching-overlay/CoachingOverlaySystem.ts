@@ -10,9 +10,6 @@ import { WebXRSystem, WebXRFeatureSystem } from "../";
 import { WebXRDomOverlay } from "@babylonjs/core/XR/features/WebXRDOMOverlay";
 import Swiper, { Navigation } from "swiper";
 
-import "swiper/css";
-import "swiper/css/navigation";
-
 /*
  * CoachingOverlaySystem
  *
