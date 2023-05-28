@@ -49,10 +49,12 @@ export class ImageTrackingSystem implements System, WebXRFeatureSystem {
       this.#imageIds[images[i].entityId] = i;
     }
 
-    // Enable Image Tracking feature
-    featuresManager.enableFeature(WebXRImageTracking, "latest", {
-      images,
-    }) as WebXRImageTracking;
+    if (images.length > 0) {
+      // Enable Image Tracking feature
+      featuresManager.enableFeature(WebXRImageTracking, "latest", {
+        images,
+      }) as WebXRImageTracking;
+    }
 
     this.#sessionManager = await this.webXRSystem.getXRSessionManager();
   }

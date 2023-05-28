@@ -67,12 +67,12 @@ init()
       ComponentType.Orientation,
       {} as Orientation
     );
-    world.add_component_to_entity(testImageAnchor, ComponentType.TrackedImage, {
-      imageAsset: {
-        "/": "QmZsDopGXAGPtToWSi8bxYjsrZkiraX7wqMZ9K8LgW2tyE",
-      },
-      physicalWidthInMeters: 0.165,
-    } as TrackedImage);
+    // world.add_component_to_entity(testImageAnchor, ComponentType.TrackedImage, {
+    //   imageAsset: {
+    //     "/": "QmZsDopGXAGPtToWSi8bxYjsrZkiraX7wqMZ9K8LgW2tyE",
+    //   },
+    //   physicalWidthInMeters: 0.165,
+    // } as TrackedImage);
     world.add_component_to_entity(testImageAnchor, ComponentType.IsAnchor, {
       isAnchor: true,
     } as IsAnchor);
