@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "module": "esnext",
-    "lib": ["es6", "dom"],
-    "target": "es6",
+    "lib": ["esnext", "dom"],
+    "target": "esnext",
     "importHelpers": false,
     "declaration": true,
     "sourceMap": true,
