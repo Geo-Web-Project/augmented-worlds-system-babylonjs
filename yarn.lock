@@ -72,10 +72,10 @@ arg@^4.1.0:
   resolved "https://registry.npmjs.org/arg/-/arg-4.1.3.tgz"
   integrity sha512-58S9QDqG0Xx27YwPSt9fJxivjYl432YCwfDMfZ+71RAqUrZef7LrKQZ3LHLOwCS4FLNBplP533Zx895SeOCHvA==
 
-augmented-worlds@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/augmented-worlds/-/augmented-worlds-0.1.3.tgz#0ef221ffd334a5e54f681aabb091e8f895f03158"
-  integrity sha512-e59g73/BGV9JsdAOmQNQRLFVutGc69GodgeT3W/52IuejUw8zZ9xT9pmJjFBcvcukxOsUJ0bxaOZGELEZOz0Hw==
+augmented-worlds@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/augmented-worlds/-/augmented-worlds-0.1.7.tgz#634dc02199fbc566aec15a4ed7dd1eea7cb80254"
+  integrity sha512-h81MQmiE4b+3CiXinFGdjosrynB4Oajugj7x125N8j4w/RupVn1tnjBlDxrlOuYuNAl9W5qNoF1ABeYKnRk2cw==
 
 create-require@^1.1.0:
   version "1.1.1"
