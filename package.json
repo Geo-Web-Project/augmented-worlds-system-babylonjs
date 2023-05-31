@@ -1,6 +1,6 @@
 {
   "name": "@augmented-worlds/system-babylonjs",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "",
   "type": "module",
   "main": "dist/index.js",

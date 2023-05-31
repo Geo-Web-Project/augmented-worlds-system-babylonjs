@@ -49,9 +49,11 @@ export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
     swiperWrapper.classList.add("swiper-wrapper");
 
     const swiperButtonNext = document.createElement("div");
+    swiperButtonNext.id = "swiper-button-next";
     swiperButtonNext.classList.add("swiper-button-next");
 
     const swiperButtonPrev = document.createElement("div");
+    swiperButtonPrev.id = "swiper-button-prev";
     swiperButtonPrev.classList.add("swiper-button-prev");
 
     swiper.appendChild(swiperWrapper);
@@ -122,6 +124,11 @@ export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
 
       document.querySelector("#coaching-overlay-text")!.innerHTML =
         coachingOverlay.text;
+
+      if (trackedImageComps.length < 2) {
+        document.getElementById("swiper-button-next")?.remove();
+        document.getElementById("swiper-button-prev")?.remove();
+      }
 
       for (const { trackedImage } of trackedImageComps) {
         if (!trackedImage?.imageAsset) continue;

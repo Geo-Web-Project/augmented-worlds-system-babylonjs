@@ -22,6 +22,8 @@ import {
 } from "@augmented-worlds/system-babylonjs";
 
 import "@augmented-worlds/system-babylonjs/styles.css";
+import "swiper/css";
+import "swiper/css/navigation";
 
 init()
   .then(() => {
@@ -67,13 +69,43 @@ init()
       ComponentType.Orientation,
       {} as Orientation
     );
-    // world.add_component_to_entity(testImageAnchor, ComponentType.TrackedImage, {
-    //   imageAsset: {
-    //     "/": "QmZsDopGXAGPtToWSi8bxYjsrZkiraX7wqMZ9K8LgW2tyE",
-    //   },
-    //   physicalWidthInMeters: 0.165,
-    // } as TrackedImage);
+    world.add_component_to_entity(testImageAnchor, ComponentType.TrackedImage, {
+      imageAsset: {
+        "/": "QmZsDopGXAGPtToWSi8bxYjsrZkiraX7wqMZ9K8LgW2tyE",
+      },
+      physicalWidthInMeters: 0.165,
+    } as TrackedImage);
     world.add_component_to_entity(testImageAnchor, ComponentType.IsAnchor, {
+      isAnchor: true,
+    } as IsAnchor);
+
+    const testImageAnchor1 = world.create_entity();
+    world.add_component_to_entity(
+      testImageAnchor1,
+      ComponentType.Component,
+      {}
+    );
+    world.add_component_to_entity(
+      testImageAnchor1,
+      ComponentType.Position,
+      {} as Position
+    );
+    world.add_component_to_entity(
+      testImageAnchor1,
+      ComponentType.Orientation,
+      {} as Orientation
+    );
+    world.add_component_to_entity(
+      testImageAnchor1,
+      ComponentType.TrackedImage,
+      {
+        imageAsset: {
+          "/": "QmWgve8r2o8NRTjFxEVawXM9nD7m97zDwJS9T4cFER5nVE",
+        },
+        physicalWidthInMeters: 0.10478,
+      } as TrackedImage
+    );
+    world.add_component_to_entity(testImageAnchor1, ComponentType.IsAnchor, {
       isAnchor: true,
     } as IsAnchor);
 
@@ -113,7 +145,7 @@ init()
       coachingOverlayEntity,
       ComponentType.CoachingOverlay,
       {
-        trackedImages: [{ "/": testImageAnchor }],
+        trackedImages: [{ "/": testImageAnchor }, { "/": testImageAnchor1 }],
         text: "Point and hold the camera on the image target to enter AR.",
       } as CoachingOverlay
     );
