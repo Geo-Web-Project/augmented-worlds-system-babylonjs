@@ -1,6 +1,6 @@
 {
   "name": "@augmented-worlds/system-babylonjs",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "",
   "type": "module",
   "main": "dist/index.js",
@@ -28,7 +28,7 @@
   "dependencies": {
     "@babylonjs/core": "^6.3.1",
     "@babylonjs/loaders": "^6.3.1",
-    "augmented-worlds": "^0.1.7",
+    "augmented-worlds": "^0.1.8",
     "multiformats": "^11.0.2",
     "swiper": "^9.3.2",
     "typescript": "^5.0.4"

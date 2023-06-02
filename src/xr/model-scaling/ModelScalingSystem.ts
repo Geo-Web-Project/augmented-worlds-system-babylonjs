@@ -24,7 +24,10 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
   constructor(
     private webXRSystem: WebXRSystem,
     private domOverlayElement: HTMLElement,
-    private modelEntityId: number
+    private modelEntityId: number,
+    addButtonClass?: string[],
+    removeButtonClass?: string[],
+    textInputClass?: string[]
   ) {
     webXRSystem.addFeatureSystem(this);
 
@@ -33,6 +36,7 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
     // Buttons
     const addButton = document.createElement("button");
     addButton.classList.add("sizing-button");
+    if (addButtonClass) addButton.classList.add(...addButtonClass);
     addButton.innerText = "+";
     addButton.ontouchstart = () => {
       addButton.style.opacity = "0.5";
@@ -49,6 +53,7 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
 
     const removeButton = document.createElement("button");
     removeButton.classList.add("sizing-button");
+    if (removeButtonClass) removeButton.classList.add(...removeButtonClass);
     removeButton.innerText = "-";
     removeButton.ontouchstart = () => {
       removeButton.style.opacity = "0.5";
@@ -70,6 +75,7 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
     this.#textField = document.createElement("input");
     this.#textField.type = "number";
     this.#textField.classList.add("scaling-input");
+    if (textInputClass) this.#textField.classList.add(...textInputClass)
     this.#textField.oninput = () => {
       this.#shouldUpdateText = true;
     };
