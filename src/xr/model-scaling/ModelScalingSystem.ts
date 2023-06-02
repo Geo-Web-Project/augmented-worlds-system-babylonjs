@@ -168,13 +168,7 @@ export class ModelScalingSystem implements System, WebXRFeatureSystem {
       this.domOverlayElement.style.visibility = "visible";
 
       if (!this.#isShowingOverlay) {
-        // Clear DOM overlay and add coaching
-        this.domOverlayElement.innerHTML = "";
-        this.domOverlayElement.style.display = "flex";
-        this.domOverlayElement.style.flexDirection = "column-reverse";
-        this.domOverlayElement.style.paddingBottom = "50px";
-        this.domOverlayElement.style.alignItems = "center";
-
+        // Add coaching
         this.domOverlayElement.appendChild(this.#innerDomOverlay);
 
         this.#isShowingOverlay = true;
