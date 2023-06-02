@@ -32,6 +32,5 @@
   content: "%";
   position: absolute;
   font-size: 2em;
-  transform: translateX(-150%);
-  margin-top: 3px;
+  transform: translateX(-125%);
 }
