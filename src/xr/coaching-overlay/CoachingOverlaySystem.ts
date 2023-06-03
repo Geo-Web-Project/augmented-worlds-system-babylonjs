@@ -112,9 +112,9 @@ export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
       }, false);
 
       if (foundImage) {
-        this.#innerDomOverlay.style.visibility = "hidden";
+        this.#innerDomOverlay.remove()
       } else {
-        this.#innerDomOverlay.style.visibility = "visible";
+        this.domOverlayElement.appendChild(this.#innerDomOverlay);
       }
 
       // Load images if needed
