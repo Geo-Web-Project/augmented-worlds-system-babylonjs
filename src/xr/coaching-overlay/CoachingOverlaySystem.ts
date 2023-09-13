@@ -112,7 +112,7 @@ export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
       }, false);
 
       if (foundImage) {
-        this.#innerDomOverlay.remove()
+        this.#innerDomOverlay.remove();
       } else {
         this.domOverlayElement.appendChild(this.#innerDomOverlay);
       }
@@ -122,8 +122,12 @@ export class CoachingOverlaySystem implements System, WebXRFeatureSystem {
 
       this.#isLoadingImages = true;
 
-      document.querySelector("#coaching-overlay-text")!.innerHTML =
-        coachingOverlay.text;
+      const coachingOverlayTxtEle = document.querySelector(
+        "#coaching-overlay-text"
+      );
+      if (coachingOverlayTxtEle !== null) {
+        coachingOverlayTxtEle.innerHTML = coachingOverlay.text;
+      }
 
       if (trackedImageComps.length < 2) {
         document.getElementById("swiper-button-next")?.remove();
